@@ -1,32 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
+  // Load todos from localStorage initially
+  const [todos, setTodos] = useState<string[]>(() => {
+    const saved = localStorage.getItem("todos");
+    return saved ? JSON.parse(saved) : [];
+  });
 
-  //initialize todos with an empty array
-  
-  const [todos, setTodos] = useState<string[]>([]);
-
-  localStorage.setItem("todos",JSON.stringify(todos));
-  // useState to manage the input value
   const [newTodo, setNewTodo] = useState<string>("");
 
+  //updates the localstorage with the todos list when user gives input
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
+  //addToDo validates the input and update in the list
   const addTodo = () => {
-    if (newTodo.trim() === "") 
-    {
-      return; // ignore empty
-    }
-    setTodos([...todos, newTodo]); // add new item
-    setNewTodo(""); // clear input
+    if (newTodo.trim() === "") return;
+    setTodos([...todos, newTodo]);
+    setNewTodo("");
   };
 
-  
-
-  //valueRem is initialised as Number type
-  // this filter function removes the item at the specified index
-  const deleteTodo = (valueRem: Number) => {
-    setTodos(prevList => prevList.filter((_, index) => index !== valueRem));
+  const deleteTodo = (valueRem: number) => {
+    setTodos((prevList) => prevList.filter((_, index) => index !== valueRem));
   };
-  
 
   // _ has been used to indicate that the first parameter is not used in the filter function
 
@@ -35,23 +32,22 @@ function App() {
       <h1>Todo List</h1>
       <p>Enter ToDo here!</p>
 
-      <input 
-      placeholder="Add todo..." 
-      value={newTodo}
-      onChange={(e) => setNewTodo(e.target.value)}
+      <input
+        placeholder="Add todo..."
+        value={newTodo}
+        onChange={(e) => setNewTodo(e.target.value)}
       />
 
       <button onClick={addTodo}>+</button>
 
       <h2>Todos:</h2>
-      {/* Render the list of todos */}
       <ul>
         {todos.map((item, index) => (
-          <li key={index}>{item}
-          <button onClick={() => deleteTodo(index)}>-</button>
-          </li> 
-        ))
-        }
+          <li key={index}>
+            {item}
+            <button onClick={() => deleteTodo(index)}> - </button>
+          </li>
+        ))}
       </ul>
     </div>
   );
