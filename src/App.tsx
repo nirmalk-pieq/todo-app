@@ -1,7 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useState } from "react";
 import Login from "./login";
-import Todo from "./todo";
+import Todo from "./components/todo";
+import EmployeeList from "./components/employeeList";
+import AddEmployee from "./components/AddEmployee";
 
 function App() {
 
@@ -40,6 +42,19 @@ function App() {
             isLoggedIn? <Todo onLogout={handleLogOut}/> : <Navigate to = "/login"/>
             }
         />
+
+        <Route path="/employees" 
+          element={
+            isLoggedIn? <EmployeeList onLogout={handleLogOut}/> : <Navigate to = "/login"/>
+            }
+        />
+
+        <Route path="/addemployee" 
+          element={
+            isLoggedIn? <AddEmployee onLogout={handleLogOut}/> : <Navigate to = "/login"/>
+            }
+        />
+
       </Routes>
     </Router>
   );
